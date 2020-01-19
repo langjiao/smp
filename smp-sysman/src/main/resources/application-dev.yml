@@ -34,9 +34,9 @@ spring:
         master:
           jndi_name:  #只要配置即表示启用。
           username: root
-          password: lj:Zpc#438
+          password: 123456
           driver-class-name : com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://111.229.68.32:3306/master?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+          url: jdbc:mysql://127.0.0.1:3306/master?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
           druid: # 以下参数针对每个库可以重新设置druid参数
             initial-size:
         slave:
@@ -75,11 +75,11 @@ spring:
   redis:
     database: 0
     #redis机器ip
-    host: 111.229.68.32
+    host: 127.0.0.1
     #redis端口
     port: 6379
     # 密码（默认为空）
-    password: lj:Zpc#438
+    password:
     #连接超时时间（毫秒）
     timeout: 5000
     lettuce:
