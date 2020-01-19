@@ -1,0 +1,177 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+      #初始化脚本
+    initialization-mode: never
+    sql-script-encoding: utf-8
+    schema: classpath:schema.sql
+    #data: classpath:schema.sql
+    druid:
+      stat-view-servlet:
+        loginUsername: admin
+        loginPassword: 123456
+    dynamic:
+      #默认数据库连接
+      primary : master
+      #格式化SQL
+      p6spy: true
+      druid: #以下是全局默认值，可以全局更改
+        initial-size: 1                     #连接池初始大小
+        max-active: 20                      #连接池中最大的活跃连接数
+        min-idle: 1                         #连接池中最小的活跃连接数
+        max-wait: 60000                     #配置获取连接等待超时的时间
+        pool-prepared-statements: true      #打开PSCache，并且指定每个连接上PSCache的大小
+        max-pool-prepared-statement-per-connection-size: 20
+        validation-query: SELECT 1 FROM DUAL
+        validation-query-timeout: 30000
+        test-on-borrow: false             #是否在获得连接后检测其可用性
+        test-on-return: false             #是否在连接放回连接池后检测其可用性
+        test-while-idle: true             #是否在连接空闲一段时间后检测其可用性
+        wall:
+          none-base-statement-allow: true
+          multi-statement-allow: true
+      datasource:
+        master:
+          jndi_name:  #只要配置即表示启用。
+          username: root
+          password: lj:Zpc#438
+          driver-class-name : com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://111.229.68.32:3306/master?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size:
+        slave:
+          one:
+            jndi_name: #只要配置即表示启用。
+            username: root
+            password: 123456
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://127.0.0.1:3306/slave?characterEncoding=utf8&useSSL=false&serverTimezone=UT
+          two:
+#            jndi_name: #只要配置即表示启用。
+#            username: oa
+#            password: oa
+#            driver-class-name : oracle.jdbc.driver.OracleDriver
+#            url: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+#            druid: # 以下参数针对每个库可以重新设置druid参数
+#              validation-query: select 1 FROM DUAL #比如oracle就需要重新设置这个
+            jndi_name: #只要配置即表示启用。
+            username: root
+            password: 123456
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://127.0.0.1:3306/slave?characterEncoding=utf8&useSSL=false&serverTimezone=UT
+  #允许重复注册bean
+  main:
+    allow-bean-definition-overriding: true
+  #排除原生Druid的快速配置类
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  cache:
+    #ehcache配置文件路径
+    ehcache:
+      config: classpath:/cache/ehcache.xml
+    #指定缓存类型，可加可不加
+    #type: ehcache
+  #缓存redis配置
+  redis:
+    database: 0
+    #redis机器ip
+    host: 111.229.68.32
+    #redis端口
+    port: 6379
+    # 密码（默认为空）
+    password: lj:Zpc#438
+    #连接超时时间（毫秒）
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: 10000    # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+  freemarker:
+    suffix: .html
+    request-context-attribute: request
+  quartz:
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO  #默认主机名和时间戳生成实例ID,可以是任何字符串，但对于所有调度程序来说，必须是唯一的 对应qrtz_scheduler_state
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX #持久化配置
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #我们仅为数据库制作了特定于数据库的代理
+            tablePrefix: QRTZ_  #数据库表前缀
+            isClustered: true #打开群集功能
+            clusterCheckinInterval: 10000
+            useProperties: false #以指示JDBCJobStore将JobDataMaps中的所有值都作为字符串，因此可以作为名称 - 值对存储而不是在BLOB列中以其序列化形式存储更多复杂的对象。从长远来看，这是更安全的，因为您避免了将非String类序列化为BLOB的类版本问题。
+            misfireThreshold: 60000 #在被认为“失火”之前，调度程序将“容忍”一个Triggers将其下一个启动时间通过的毫秒数。默认值（如果您在配置中未输入此属性）为60000（60秒）。
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: jdbc
+    #初始化表结构
+    jdbc:
+      initialize-schema: never
+
+#配置分页插件pagehelper
+pagehelper:
+  helperDialect: mysql
+  # 分页合理化参数，默认值为false。当该参数设置为 true 时，pageNum<=0 时会查询第一页， pageNum>pages（超过总数时），会查询最后一页
+  reasonable: true
+  # 支持通过 Mapper 接口参数来传递分页参数
+  supportMethodsArguments: true
+  params: count=countSql
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.xuaiyun.smp.modules.*.entity
+  global-config:
+    #数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: AUTO
+      logic-delete-value: -1
+      logic-not-delete-value: 0
+    banner: false
+  #原生配置
+  configuration:
+    # 开启驼峰命名转换，如：Table(create_time) -> Entity(createTime)。不需要我们关心怎么进行字段匹配，mybatis会自动识别`大写字母与下划线`
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+    # 使用列别名替换列名，默认true。如：select name as title from table
+    use-column-label: true
+    # 使用jdbc的getGeneratedKeys 可以获取数据库自增主键值
+    use-generated-keys: false
+
+#验证码配置
+kaptcha:
+  height: 50
+  width: 200
+  content:
+    length: 4
+    source: abcdefghjklmnopqrstuvwxyz23456789
+    space: 2
+  font:
+    color: black
+    name: Arial
+    size: 40
+  background-color:
+    from: lightGray
+    to: white
+  border:
+    enabled: true
+    color: black
+    thickness: 1
+logging:
+  config: classpath:logback-spring.xml
+
+
+

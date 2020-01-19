@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>登录日志</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn" style="height:34px;">
+			<div class="form-group col-sm-2">
+				<input type="text" class="layui-input" v-model="q.loginUser" @keyup.enter="query" placeholder="登录用户">
+			</div>
+			<div class="form-group col-sm-2">
+				<input type="text" name="createTime" id="login-time"  v-model="q.loginTime" class="layui-input" placeholder="登录时间">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("sys:login_log:delete")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+	<table id="jqGrid"></table>
+	<div id="jqGridPager"></div>
+	</div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/sys/login_log.js?_${.now?long}"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.2/weblogic-web-app.xsd">
+    <!-- 项目名称-->
+    <context-root>/smp</context-root>
+    <container-descriptor>
+        <prefer-application-packages>
+            <package-name>org.apache.commons.lang.*</package-name>
+            <package-name>antlr.*</package-name>
+            <package-name>javax.persistence.*</package-name>
+            <package-name>org.apache.xerces.*</package-name>
+            <package-name>org.objectweb.asm.*</package-name>
+            <package-name>org.springframework.*</package-name>
+            <package-name>org.slf4j</package-name>
+        </prefer-application-packages>
+    </container-descriptor>
+    <!--    优先加载类路径下的jar包-->
+    <container-descriptor>
+        <prefer-web-inf-classes>true</prefer-web-inf-classes>
+    </container-descriptor>
+</weblogic-web-app>
