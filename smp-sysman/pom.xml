@@ -13,7 +13,7 @@
     <name>smp-sysman</name>
     <properties>
         <mybatis.version>1.3.2</mybatis.version>
-        <shiro.version>1.4.2</shiro.version>
+        <shiro.version>1.8.0</shiro.version>
     </properties>
     <dependencies>
         <dependency>
